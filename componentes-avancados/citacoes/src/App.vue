@@ -1,7 +1,12 @@
 <template>
 	<div id="app">
-		<Citacoes />
-		<Sobre />
+		<span>
+			<button v-on:click="componente = 'Citacoes'">Citações</button>
+			<button v-on:click="componente = 'Sobre'">Sobre</button>
+		</span>
+		<keep-alive>
+			<component v-bind:is="componente" />
+		</keep-alive>
 	</div>
 </template>
 
@@ -10,7 +15,12 @@ import Citacoes from './components/CitacoesComponente'
 import Sobre from './components/SobreComponente'
 
 export default {
-	components: { Citacoes, Sobre }
+	components: { Citacoes, Sobre },
+	data(){
+		return {
+			componente: 'Citacoes'
+		}
+	}
 }
 </script>
 
