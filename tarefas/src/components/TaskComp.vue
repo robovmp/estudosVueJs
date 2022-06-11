@@ -1,6 +1,8 @@
 <template>
-    <div class="task" v-bind:class="stateClass">
-        <span class="close" v-on:click="deleteTask" >x</span>
+    <div
+        v-on:click="taskStateChanged(task)" 
+        class="task" v-bind:class="stateClass">
+        <span class="close" v-on:click.stop="deleteTask" >x</span>
         <p> {{task.name}} </p>
     </div>    
 </template>
@@ -25,6 +27,9 @@ export default {
    methods:{
     deleteTask(task){
         barramento.$emit('deleteTask', task)
+    },
+    taskStateChanged(task){
+        barramento.$emit('taskChanged', task)
     }
    }
 

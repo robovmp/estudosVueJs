@@ -2,7 +2,7 @@
 	<div id="app">
 		<h1>Tarefas</h1>
 		<new-task v-on:taskAdded="addTask" />
-		<task-grid v-bind:tasks="tasks" />
+		<task-grid v-bind:tasks="tasks"  />
 	</div>
 </template>
 
@@ -14,10 +14,15 @@ export default {
 	components:{TaskGrid, NewTask},
 	data(){
 		return{
-			tasks:[
-				{name:'lavar roupa', pending:true},
-				{name:'fazer almoço', pending:false}
-			]
+			tasks:[]
+		}
+	},
+	watch:{
+		tasks: {
+			deep: true,
+			handler(){
+				localStorage.setItem( 'tasks', JSON.stringify( this.tasks ) )
+			}
 		}
 	},
 	methods:{
@@ -28,17 +33,29 @@ export default {
 			if(reallyNew){
 				this.tasks.push( {
 					name: task.name,
-					pending: task.pending || true
+					pending: true
 				} )
 			}
 			
 		}
 	},
 	created(){
+
+		const json = localStorage.getItem( 'tasks' )
+		const array = JSON.parse( json )
+		if( Array.isArray( array ) ){
+			this.tasks = array
+		}
+
 		barramento.$on('deleteTask', task =>{
 			const i = this.tasks.indexOf(task)
 			this.tasks.splice(i, 1)
 		} )
+
+		barramento.$on('taskChanged', task =>{
+			const i = this.tasks.indexOf(task)
+			this.tasks[i].pending = !this.tasks[i].pending
+		})
 	}
 
 }
