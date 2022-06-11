@@ -9,7 +9,7 @@
 <script>
 import TaskGrid from './components/TaskGrid.vue'
 import NewTask from './components/NewTask.vue'
-
+import barramento from './barramento'
 export default {
 	components:{TaskGrid, NewTask},
 	data(){
@@ -33,6 +33,12 @@ export default {
 			}
 			
 		}
+	},
+	created(){
+		barramento.$on('deleteTask', task =>{
+			const i = this.tasks.indexOf(task)
+			this.tasks.splice(i, 1)
+		} )
 	}
 
 }
